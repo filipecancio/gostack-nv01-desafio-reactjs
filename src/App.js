@@ -19,29 +19,30 @@ function App() {
 
   async function handleRemoveRepository(id) {
     api.delete(`/repositories/${id}`);
+    handlegetRepository();
+  }
+
+  async function handlegetRepository() {
+    api.get('repositories').then(response => {
+      setData(response.data);
+    })
   }
 
   useEffect(() => {
-    (async () => {
-      api.get('repositories').then(response => {
-        setData(response.data);
-      })
-    })();
+    (async () => handlegetRepository())();
   }, []);
 
   return (
     <div>
       <ul data-testid="repository-list">
         {data ? data.map(project =>(
-          <>
-            <li>
+            <li key={project.id}>
               <h2>{project.title}</h2>
 
           <button onClick={() => handleRemoveRepository(project.id)}>
             Remover
           </button>
             </li>
-          </>
         )):(<></>)}
       </ul>
 
